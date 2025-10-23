@@ -24,7 +24,7 @@
 
 ### Semester Assignments
 
-- Link to Assignment 1: [Craftly – Video Pitch](https://youtu.be/mih9sFJeEg4) <!-- Replace with actual URL -->
+- Link to Assignment 1: [Idea pitch](assignments/1%20-%20Idea%20pitch/) 
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
