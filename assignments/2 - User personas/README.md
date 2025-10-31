@@ -7,7 +7,7 @@ Below are the three primary user personas developed for **Craftly**, our web-bas
 ## 👩‍🎨 Persona 1 — Sophie Miller
 <table>
 <tr>
-<td width="260px">
+<td width="350px">
   <img src="Sophie.png" alt="Sophie Miller" width="240" style="border-radius:12px;"/>
 </td>
 <td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
@@ -43,7 +43,7 @@ Sophie is creative, independent, and detail-oriented. She enjoys collaborating o
 ## 👨‍💻 Persona 2 — Luka Horvat
 <table>
 <tr>
-<td width="260px">
+<td width="350px">
   <img src="Luka.png" alt="Luka Horvat" width="240" style="border-radius:12px;"/>
 </td>
 <td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
@@ -79,7 +79,7 @@ Luka is analytical, innovative, and loves clean design. He’s passionate about 
 ## 👩‍🏫 Persona 3 — Emma Rodriguez
 <table>
 <tr>
-<td width="260px">
+<td width="350px">
   <img src="Emma.png" alt="Emma Rodriguez" width="240" style="border-radius:12px;"/>
 </td>
 <td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
@@ -110,7 +110,27 @@ Emma is artistic, empathetic, and enjoys inspiring creativity in others. She tea
 </tr>
 </table>
 
----
-
 ## 🧠 LLM Prompt Used
 > *"Generate three realistic user personas for a web-based portfolio management app (Craftly). Include demographic data, motivations, frustrations, and quotes. Make one persona from Split, Croatia, and one a programmer."*
+---
+
+
+
+### Sitemap
+
+The sitemap ensures intuitive navigation for both creators and viewers. Users can easily browse others’ portfolios and manage their own efficiently.
+
+![Sitemap](SiteMap.png)
+
+## 🧠 LLM Prompt Used
+> *"
+Create a detailed flowchart sitemap for a web application called "Craftly". The sitemap should clearly show the hierarchy and navigation structure. The web app has the following main features:
+1. A public area where users can browse and view other users' portfolios.
+   - Sections: Explore Portfolios, Featured Portfolios, Search Portfolios, Portfolio Detail Page
+2. A personal area where a user can manage and edit their own portfolio.
+   - Sections: My Portfolio, Edit Portfolio, Add Project, Delete Project, Portfolio Analytics
+3. Common areas:
+   - Home / Dashboard
+   - Account Settings (Profile, Security, Logout)
+   - Resources / Help (Tutorials, Templates, FAQs)"*
+
