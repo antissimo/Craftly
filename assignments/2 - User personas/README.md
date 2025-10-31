@@ -7,10 +7,10 @@ Below are the three primary user personas developed for **Craftly**, our web-bas
 ## 👩‍🎨 Persona 1 — Sophie Miller
 <table>
 <tr>
-<td width="200px">
-  <img src="Sophie.png" alt="Sophie Miller" width="180" style="border-radius:10px;"/>
+<td width="260px">
+  <img src="Sophie.png" alt="Sophie Miller" width="240" style="border-radius:12px;"/>
 </td>
-<td>
+<td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
 
 **Age:** 28  
 **Location:** London, UK  
@@ -43,10 +43,10 @@ Sophie is creative, independent, and detail-oriented. She enjoys collaborating o
 ## 👨‍💻 Persona 2 — Luka Horvat
 <table>
 <tr>
-<td width="200px">
-  <img src="Luka.png" alt="Luka Horvat" width="180" style="border-radius:10px;"/>
+<td width="260px">
+  <img src="Luka.png" alt="Luka Horvat" width="240" style="border-radius:12px;"/>
 </td>
-<td>
+<td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
 
 **Age:** 31  
 **Location:** Split, Croatia  
@@ -79,10 +79,10 @@ Luka is analytical, innovative, and loves clean design. He’s passionate about 
 ## 👩‍🏫 Persona 3 — Emma Rodriguez
 <table>
 <tr>
-<td width="200px">
-  <img src="Emma.png" alt="Emma Rodriguez" width="180" style="border-radius:10px;"/>
+<td width="260px">
+  <img src="Emma.png" alt="Emma Rodriguez" width="240" style="border-radius:12px;"/>
 </td>
-<td>
+<td style="font-size: 14px; line-height: 1.4; padding-left: 20px;">
 
 **Age:** 35  
 **Location:** Madrid, Spain  
