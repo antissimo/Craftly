@@ -124,13 +124,7 @@ The sitemap ensures intuitive navigation for both creators and viewers. Users ca
 
 ## 🧠 LLM Prompt Used
 > *"
-Create a detailed flowchart sitemap for a web application called "Craftly". The sitemap should clearly show the hierarchy and navigation structure. The web app has the following main features:
-1. A public area where users can browse and view other users' portfolios.
-   - Sections: Explore Portfolios, Featured Portfolios, Search Portfolios, Portfolio Detail Page
-2. A personal area where a user can manage and edit their own portfolio.
-   - Sections: My Portfolio, Edit Portfolio, Add Project, Delete Project, Portfolio Analytics
-3. Common areas:
-   - Home / Dashboard
-   - Account Settings (Profile, Security, Logout)
-   - Resources / Help (Tutorials, Templates, FAQs)"*
+Create a detailed flowchart sitemap for a web application called "Craftly" that clearly shows the hierarchy and navigation structure. The web app should include a public area where users can browse and view other users' portfolios, including sections such as Explore Portfolios, Featured Portfolios, Search Portfolios, and Portfolio Detail Page; a personal area where a user can manage and edit their own portfolio, including My Portfolio, Edit Portfolio, Add Project, Delete Project, and Portfolio Analytics; and common areas such as Home / Dashboard, Account Settings with Profile, Security, and Logout, and Resources / Help with Tutorials, Templates, and FAQs.
+"*
+
 
