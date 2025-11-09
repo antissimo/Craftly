@@ -26,7 +26,7 @@
 
 - Link to Assignment 1: [Idea pitch](assignments/1%20-%20Idea%20pitch/)
 - Link to Assignment 2: [User personas](assignments/2%20-%20User%20personas/)
-- Link to Assignment 3: [Production](https://craftly-omega.vercel.app/)
+- Link to Assignment 3: [Next.js deploy](https://craftly-omega.vercel.app/)
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
