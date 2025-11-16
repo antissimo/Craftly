@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { Analytics } from "@vercel/analytics/react"; // note the 'react' import
+
 
 export default function HomePage() {
   return (
@@ -71,6 +73,8 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
+            <Analytics /> {/* This will automatically track pageviews */}
+
     </section>
   );
 }
