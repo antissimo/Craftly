@@ -1,4 +1,4 @@
-// app/portfolio/[id]/page.tsx
+// app/portfolio/[id]/page.tsx (bez stats sekcije)
 import { config } from '@/config';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -167,7 +167,7 @@ export default async function PortfolioPage({
               )}
             </div>
 
-            {/* Right Column - Skills */}
+            {/* Right Column - Skills ONLY (bez stats) */}
             {portfolio.skills && portfolio.skills.length > 0 && (
               <div className="md:col-span-1">
                 <section className="sticky top-6">
@@ -195,25 +195,6 @@ export default async function PortfolioPage({
                           <span className="ml-1 text-xs opacity-75">({skill.level || ''})</span>
                         </span>
                       ))}
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="mt-8 bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-                    <h3 className="font-semibold text-gray-900 mb-4">Portfolio Stats</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Experiences</span>
-                        <span className="font-medium">{portfolio.experiences?.length || 0}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Education</span>
-                        <span className="font-medium">{portfolio.education?.length || 0}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Skills</span>
-                        <span className="font-medium">{portfolio.skills?.length || 0}</span>
-                      </div>
                     </div>
                   </div>
                 </section>
