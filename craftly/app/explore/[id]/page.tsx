@@ -1,5 +1,5 @@
 // app/portfolio/[id]/page.tsx (bez stats sekcije)
-import { config } from '../../../config';
+import { config } from '@/config';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
