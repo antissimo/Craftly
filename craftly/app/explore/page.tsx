@@ -3,11 +3,10 @@ import CVCard from '@/components/CVCard';
 import { Suspense } from 'react';
 import LoadingGrid from '@/components/LoadingGrid';
 import Pagination from '@/components/Pagination';
-import {config} from "@/config"
 
 async function getCVs(page: number = 1) {
   try {
-    const apiUrl = config.apiUrl || 'http://localhost:3000';
+    const apiUrl = process.env.NEXT_PUBLIC_APP_URL;
     const res = await fetch(`${apiUrl}/api/explore?page=${page}&limit=12`, {
       cache: 'no-store',
     });

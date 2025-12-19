@@ -1,12 +1,11 @@
 // app/portfolio/[id]/page.tsx (bez stats sekcije)
-import { config } from '@/config';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 async function getPortfolio(id: string) {
   try {
-    const apiUrl = config.apiUrl || 'http://localhost:3000';
+    const apiUrl = process.env.NEXT_PUBLIC_APP_URL;
     console.log('Fetching from:', `${apiUrl}/api/explore/${id}`);
     
     const res = await fetch(`${apiUrl}/api/explore/${id}`, {
