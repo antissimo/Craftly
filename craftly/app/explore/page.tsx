@@ -3,7 +3,7 @@ import CVCard from '@/components/CVCard';
 import { Suspense } from 'react';
 import LoadingGrid from '@/components/LoadingGrid';
 import Pagination from '@/components/Pagination';
-import {config} from "@/config"
+import {config} from "../../config"
 
 async function getCVs(page: number = 1) {
   try {
