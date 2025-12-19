@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+Add-Content -Path .gitignore -Value "`n# Config files`n/config.ts`"
+
