@@ -1,0 +1,56 @@
+{
+  "name": "craftly",
+  "version": "1.0.0",
+  "description": "- [Project Structure](#project-structure)\r - [My Project Links](#my-project-links)\r   - [Semester Project](#semester-project)\r   - [Semester Assignments](#semester-assignments)\r - [Project Requirements](#project-requirements)\r   - [Web Application Requirements](#web-application-requirements)\r   - [Project Demonstration](#project-demonstration)",
+  "main": "index.js",
+  "private": true,
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antissimo/Craftly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antissimo/Craftly/issues"
+  },
+  "homepage": "https://github.com/antissimo/Craftly#readme",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx db/seed.ts"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.87.3",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/postgres": "^0.10.0",
+    "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.1",
+    "next": "15.5.5",
+    "postgres": "^3.4.7",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25.0.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
+    "drizzle-kit": "^0.31.8",
+    "tailwindcss": "^4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
