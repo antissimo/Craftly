@@ -3,13 +3,22 @@ import CVCard from '@/components/CVCard';
 import { Suspense } from 'react';
 import LoadingGrid from '@/components/LoadingGrid';
 import Pagination from '@/components/Pagination';
+import { headers } from 'next/headers';
 
+async function getCurrentUrl() {
+  const headersList = await headers();
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  const host = headersList.get('host') || 'localhost:3000';
+  const pathname = '/api/explore'; // Your API path
+  
+  return `${protocol}://${host}${pathname}`;
+}
 async function getCVs(page: number = 1) {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_APP_URL;
-    const res = await fetch(`${apiUrl}/api/explore?page=${page}&limit=12`, {
-      cache: 'no-store',
-    });
+    const currentUrl = await getCurrentUrl();
+  const res = await fetch(`${currentUrl}?page=${page}&limit=12`, {
+    cache: 'no-store',
+  });
     
     console.log('API Response status:', res.status);
     

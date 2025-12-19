@@ -2,15 +2,23 @@
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 
+async function getCurrentUrl(id: string) {
+  const headersList = await headers();
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  const host = headersList.get('host') || 'localhost:3000';
+  const pathname = '/api/explore'; // Your API path
+  
+  return `${protocol}://${host}${pathname}/${id}`;
+}
 async function getPortfolio(id: string) {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_APP_URL;
-    console.log('Fetching from:', `${apiUrl}/api/explore/${id}`);
-    
-    const res = await fetch(`${apiUrl}/api/explore/${id}`, {
-      cache: 'no-store',
-    });
+
+    const currentUrl = await getCurrentUrl(id);
+    const res = await fetch(`${currentUrl}`, {
+    cache: 'no-store',
+  });
     
     if (!res.ok) {
       if (res.status === 404) {
