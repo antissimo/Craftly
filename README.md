@@ -27,6 +27,7 @@
 - Link to Assignment 1: [Idea pitch](assignments/1%20-%20Idea%20pitch/)
 - Link to Assignment 2: [User personas](assignments/2%20-%20User%20personas/)
 - Link to Assignment 3: [Next.js deploy](https://craftly-omega.vercel.app/)
+- Link to Assignment 4: [Low High fidelity prototype](assignments/4%20-%20Low%20High%20fidelity%20prototype/)
 - Link to Assignment 5: [Dynamic routes, data fetching](https://craftly-omega.vercel.app/explore)
 <!-- Add more assignments as necessary -->
 
