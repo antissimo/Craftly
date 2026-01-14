@@ -34,11 +34,13 @@ async function getCVs(page: number = 1) {
    Page
 ---------------------------------------- */
 
-export default async function ExplorePage(props: {
-  searchParams: Promise<{ page?: string }>;
+export default async function ExplorePage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
 }) {
-  const searchParams = await props.searchParams;
   const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+  
   return (
     <section className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
