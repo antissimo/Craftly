@@ -34,12 +34,13 @@ async function getCVs(page: number = 1) {
    Page
 ---------------------------------------- */
 
-export default async function ExplorePage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
+export default async function ExplorePage(props: any) {
+  // Handle both Promise and object types for Next.js 15 compatibility
+  const searchParams = props.searchParams instanceof Promise 
+    ? await props.searchParams 
+    : props.searchParams;
+  
+  const page = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
   
   return (
     <section className="min-h-screen bg-gray-50 py-8">
