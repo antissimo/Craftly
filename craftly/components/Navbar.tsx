@@ -13,7 +13,7 @@ export default function Navbar() {
 
   const publicLinks = [
     { href: "/", label: "Home" },
-    { href: "/explore", label: "Explore" },
+    { href: "/explore?page=1", label: "Explore" },
     { href: "/featured", label: "Featured" },
     { href: "/search", label: "Search" },
     { href: "/resources", label: "Resources" },
@@ -96,8 +96,8 @@ export default function Navbar() {
               >
                 {/* Simple user icon circle with initials fallback */}
                 <div className="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-medium">
-                  {user?.name
-                    ? user.name
+                  {user?.username
+                    ? user.username
                         .split(" ")
                         .map((n) => n[0])
                         .slice(0, 2)

@@ -8,6 +8,20 @@
       "when": 1766080378075,
       "tag": "0000_normal_mentor",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768409083407,
+      "tag": "0001_add-name-to-users",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768410211311,
+      "tag": "0002_add-name-to-users",
+      "breakpoints": true
     }
   ]
 }

@@ -2,12 +2,14 @@
 import { pgTable, uuid, text, timestamp, foreignKey } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-// USERS
+// lib/db/schema.ts
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
+  id: text("id").primaryKey(),      
   email: text("email").notNull().unique(),
+  name: text("name").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
 
 // CVS
 export const cvs = pgTable("cvs", {
