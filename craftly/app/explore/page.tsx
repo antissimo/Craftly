@@ -2,6 +2,7 @@ import CVCard from '@/components/CVCard';
 import { Suspense } from 'react';
 import LoadingGrid from '@/components/LoadingGrid';
 import { headers } from 'next/headers';
+import Link from "next/link";
 
 /* ----------------------------------------
    Helpers
@@ -45,14 +46,14 @@ export default async function ExplorePage(props: any) {
   return (
     <section className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        <div className="mb-10 text-center">
+        {/* <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Explore Portfolios
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Browse public portfolios shared by creatives worldwide.
           </p>
-        </div>
+        </div> */}
 
         <Suspense fallback={<LoadingGrid />}>
           <ExploreContent page={page} />
@@ -105,6 +106,42 @@ async function ExploreContent({ page }: { page: number }) {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Previous */}
+            {pagination.page > 1 ? (
+              <Link
+                href={`/explore?page=${pagination.page - 1}`}
+                className="w-full sm:w-auto px-5 py-2 rounded-md border bg-white text-gray-700 text-center hover:bg-gray-100 transition"
+              >
+                ← Previous
+              </Link>
+            ) : (
+              <span className="w-full sm:w-auto px-5 py-2 rounded-md bg-gray-100 text-gray-400 text-center cursor-not-allowed">
+                ← Previous
+              </span>
+            )}
+
+            {/* Page Info */}
+            <span className="text-sm text-gray-500">
+              Page {pagination.page} of {pagination.totalPages}
+            </span>
+
+            {/* Next */}
+            {pagination.page < pagination.totalPages ? (
+              <Link
+                href={`/explore?page=${pagination.page + 1}`}
+                className="w-full sm:w-auto px-5 py-2 rounded-md border bg-white text-gray-700 text-center hover:bg-gray-100 transition"
+              >
+                Next →
+              </Link>
+            ) : (
+              <span className="w-full sm:w-auto px-5 py-2 rounded-md bg-gray-100 text-gray-400 text-center cursor-not-allowed">
+                Next →
+              </span>
+            )}
+          </div>
+        )}
+
           <div className="flex items-center justify-between">
             {/* Previous */}
             {pagination.page > 1 ? (
@@ -139,7 +176,7 @@ async function ExploreContent({ page }: { page: number }) {
               </span>
             )}
           </div>
-        )}
+        
       </>
     );
   } catch (error: any) {
