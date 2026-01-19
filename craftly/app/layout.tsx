@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { AuthProvider } from "@/app/context/AuthContext";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Craftly",
@@ -13,11 +14,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        {/* Wrap your app in the client-side AuthProvider */}
         <AuthProvider>
-                    <Navbar />
-
-          {children}
+        <Navbar />
+        {children}
+        <Footer />
         </AuthProvider>
       </body>
     </html>
