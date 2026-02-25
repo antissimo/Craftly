@@ -10,11 +10,13 @@ import LoginModal from "./LoginModal";
 type NavLink = {
   href: string;
   label: string;
+  loggedInOnly?: boolean;
 };
 
 const fallbackPublicLinks: NavLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/explore?page=1", label: "Explore" },
+  { href: "/", label: "Home", loggedInOnly: false },
+  { href: "/explore?page=1", label: "Explore", loggedInOnly: false },
+  { href: "/my-portfolio", label: "My Portfolio", loggedInOnly: true },
 ];
 
 export default function Navbar() {
@@ -22,12 +24,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const [publicLinks, setPublicLinks] = useState<NavLink[]>(fallbackPublicLinks);
-
-  const privateLinks = [
-    { href: "/my-portfolio", label: "My Portfolio" },
-  ];
-
-  const allLinks = [...publicLinks, ...(isLoggedIn ? privateLinks : [])];
+  const allLinks = publicLinks.filter((link) => !link.loggedInOnly || isLoggedIn);
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

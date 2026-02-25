@@ -4,11 +4,13 @@ type PayloadNavLink = {
   label?: unknown;
   url?: unknown;
   visible?: unknown;
+  loggedInOnly?: unknown;
 };
 
 const fallbackLinks = [
-  { href: "/", label: "Home" },
-  { href: "/explore?page=1", label: "Explore" },
+  { href: "/", label: "Home", loggedInOnly: false },
+  { href: "/explore?page=1", label: "Explore", loggedInOnly: false },
+  { href: "/my-portfolio", label: "My Portfolio", loggedInOnly: true },
 ];
 
 function normalizeLinks(raw: unknown) {
@@ -21,6 +23,7 @@ function normalizeLinks(raw: unknown) {
     .map((item) => ({
       href: item.url as string,
       label: item.label as string,
+      loggedInOnly: item.loggedInOnly === true,
     }));
 
   return links.length > 0 ? links : fallbackLinks;
