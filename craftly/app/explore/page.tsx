@@ -1,26 +1,53 @@
-import CVCard from '@/components/CVCard';
-import { Suspense } from 'react';
-import LoadingGrid from '@/components/LoadingGrid';
-import { headers } from 'next/headers';
+import CVCard from "@/components/CVCard";
+import LoadingGrid from "@/components/LoadingGrid";
+import { headers } from "next/headers";
 import Link from "next/link";
+import { Suspense } from "react";
 
-/* ----------------------------------------
-   Helpers
----------------------------------------- */
+type SearchParams = { page?: string; q?: string };
+
+type ExplorePageProps = {
+  searchParams?: Promise<SearchParams>;
+};
+
+type CV = {
+  id: string;
+  title: string;
+  summary: string;
+  updatedAt: string;
+  userEmail: string;
+  userName: string;
+};
+
+type ExploreResponse = {
+  cvs: CV[];
+  pagination: {
+    page: number;
+    totalPages: number;
+    total: number;
+  };
+};
 
 async function getCurrentUrl() {
   const headersList = await headers();
-  const protocol = headersList.get('x-forwarded-proto') || 'http';
-  const host = headersList.get('host') || 'localhost:3000';
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+  const host = headersList.get("host") || "localhost:3000";
 
   return `${protocol}://${host}/api/explore`;
 }
 
-async function getCVs(page: number = 1) {
+async function getCVs(page = 1, query = ""): Promise<ExploreResponse> {
   const currentUrl = await getCurrentUrl();
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: "12",
+  });
+  if (query.trim()) {
+    params.set("q", query.trim());
+  }
 
-  const res = await fetch(`${currentUrl}?page=${page}&limit=12`, {
-    cache: 'no-store',
+  const res = await fetch(`${currentUrl}?${params.toString()}`, {
+    cache: "no-store",
   });
 
   if (!res.ok) {
@@ -31,55 +58,70 @@ async function getCVs(page: number = 1) {
   return res.json();
 }
 
-/* ----------------------------------------
-   Page
----------------------------------------- */
+export default async function ExplorePage({ searchParams }: ExplorePageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const page = resolvedSearchParams?.page
+    ? Number.parseInt(resolvedSearchParams.page, 10)
+    : 1;
+  const query = (resolvedSearchParams?.q || "").trim();
 
-export default async function ExplorePage(props: any) {
-  // Handle both Promise and object types for Next.js 15 compatibility
-  const searchParams = props.searchParams instanceof Promise 
-    ? await props.searchParams 
-    : props.searchParams;
-  
-  const page = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
-  
   return (
-    <section className="min-h-screen bg-gray-50 py-8">
+    <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-cyan-50/40 py-10">
       <div className="container mx-auto px-4">
-        {/* <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Explore Portfolios
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Browse public portfolios shared by creatives worldwide.
+        <div className="mb-10 rounded-3xl border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-cyan-700">
+            Discover
           </p>
-        </div> */}
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Explore creative portfolios
+          </h1>
+          <p className="mt-3 max-w-2xl text-slate-600">
+            Browse recent public profiles and open the full portfolio in one click.
+          </p>
+
+          <form action="/explore" method="get" className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <input
+              name="q"
+              defaultValue={query}
+              placeholder="Search by title, summary, or email..."
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-cyan-200 transition focus:ring-2"
+            />
+            <button
+              type="submit"
+              className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
+            >
+              Search
+            </button>
+          </form>
+        </div>
 
         <Suspense fallback={<LoadingGrid />}>
-          <ExploreContent page={page} />
+          <ExploreContent page={Number.isNaN(page) || page < 1 ? 1 : page} query={query} />
         </Suspense>
       </div>
     </section>
   );
 }
 
-/* ----------------------------------------
-   Content
----------------------------------------- */
+function pageHref(page: number, query: string) {
+  const params = new URLSearchParams({ page: String(page) });
+  if (query) {
+    params.set("q", query);
+  }
+  return `/explore?${params.toString()}`;
+}
 
-async function ExploreContent({ page }: { page: number }) {
+async function ExploreContent({ page, query }: { page: number; query: string }) {
   try {
-    const data = await getCVs(page);
+    const data = await getCVs(page, query);
     const { cvs, pagination } = data;
 
     if (!cvs || cvs.length === 0) {
       return (
-        <div className="text-center py-20">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            No portfolios found
-          </h3>
-          <p className="text-gray-500">
-            There are no portfolios to display at the moment.
+        <div className="rounded-2xl border border-slate-200 bg-white p-14 text-center shadow-sm">
+          <h3 className="text-xl font-semibold text-slate-700">No portfolios found</h3>
+          <p className="mt-2 text-slate-500">
+            No results for "{query || "your search"}". Try another keyword.
           </p>
         </div>
       );
@@ -87,8 +129,7 @@ async function ExploreContent({ page }: { page: number }) {
 
     return (
       <>
-        {/* Meta */}
-        <div className="mb-6 flex justify-between items-center text-sm text-gray-500">
+        <div className="mb-6 flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>
             Showing {cvs.length} of {pagination.total} portfolios
           </span>
@@ -97,97 +138,54 @@ async function ExploreContent({ page }: { page: number }) {
           </span>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-          {cvs.map((cv: any) => (
+        <div className="grid grid-cols-1 gap-6 pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {cvs.map((cv) => (
             <CVCard key={cv.id} cv={cv} />
           ))}
         </div>
 
-        {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-            {/* Previous */}
+          <div className="mt-10 flex flex-col items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:flex-row">
             {pagination.page > 1 ? (
               <Link
-                href={`/explore?page=${pagination.page - 1}`}
-                className="w-full sm:w-auto px-5 py-2 rounded-md border bg-white text-gray-700 text-center hover:bg-gray-100 transition"
+                href={pageHref(pagination.page - 1, query)}
+                className="w-full rounded-md border border-slate-300 px-5 py-2 text-center font-medium text-slate-700 transition hover:bg-slate-50 sm:w-auto"
               >
-                ← Previous
+                Previous
               </Link>
             ) : (
-              <span className="w-full sm:w-auto px-5 py-2 rounded-md bg-gray-100 text-gray-400 text-center cursor-not-allowed">
-                ← Previous
+              <span className="w-full cursor-not-allowed rounded-md bg-slate-100 px-5 py-2 text-center text-slate-400 sm:w-auto">
+                Previous
               </span>
             )}
 
-            {/* Page Info */}
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-slate-500">
               Page {pagination.page} of {pagination.totalPages}
             </span>
 
-            {/* Next */}
             {pagination.page < pagination.totalPages ? (
               <Link
-                href={`/explore?page=${pagination.page + 1}`}
-                className="w-full sm:w-auto px-5 py-2 rounded-md border bg-white text-gray-700 text-center hover:bg-gray-100 transition"
+                href={pageHref(pagination.page + 1, query)}
+                className="w-full rounded-md bg-slate-900 px-5 py-2 text-center font-medium text-white transition hover:bg-slate-700 sm:w-auto"
               >
-                Next →
+                Next
               </Link>
             ) : (
-              <span className="w-full sm:w-auto px-5 py-2 rounded-md bg-gray-100 text-gray-400 text-center cursor-not-allowed">
-                Next →
+              <span className="w-full cursor-not-allowed rounded-md bg-slate-100 px-5 py-2 text-center text-slate-400 sm:w-auto">
+                Next
               </span>
             )}
           </div>
         )}
-
-          <div className="flex items-center justify-between">
-            {/* Previous */}
-            {pagination.page > 1 ? (
-              <a
-                href={`/explore?page=${pagination.page - 1}`}
-                className="px-4 py-2 rounded-md border bg-white text-gray-700 hover:bg-gray-100 transition"
-              >
-                ← Previous
-              </a>
-            ) : (
-              <span className="px-4 py-2 rounded-md bg-gray-100 text-gray-400 cursor-not-allowed">
-                ← Previous
-              </span>
-            )}
-
-            {/* Page Info */}
-            <span className="text-sm text-gray-500">
-              Page {pagination.page} of {pagination.totalPages}
-            </span>
-
-            {/* Next */}
-            {pagination.page < pagination.totalPages ? (
-              <a
-                href={`/explore?page=${pagination.page + 1}`}
-                className="px-4 py-2 rounded-md border bg-white text-gray-700 hover:bg-gray-100 transition"
-              >
-                Next →
-              </a>
-            ) : (
-              <span className="px-4 py-2 rounded-md bg-gray-100 text-gray-400 cursor-not-allowed">
-                Next →
-              </span>
-            )}
-          </div>
-        
       </>
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Please refresh the page";
+
     return (
-      <div className="text-center py-20">
-        <h3 className="text-xl font-semibold text-red-600 mb-2">
-          Failed to load portfolios
-        </h3>
-        <p className="text-gray-500">
-          {error.message || 'Please refresh the page'}
-        </p>
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-14 text-center">
+        <h3 className="text-xl font-semibold text-red-700">Failed to load portfolios</h3>
+        <p className="mt-2 text-red-600">{message}</p>
       </div>
     );
   }

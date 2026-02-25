@@ -14,14 +14,10 @@ export default function Navbar() {
   const publicLinks = [
     { href: "/", label: "Home" },
     { href: "/explore?page=1", label: "Explore" },
-    { href: "/featured", label: "Featured" },
-    { href: "/search", label: "Search" },
-    { href: "/resources", label: "Resources" },
   ];
 
   const privateLinks = [
     { href: "/my-portfolio", label: "My Portfolio" },
-    { href: "/settings", label: "Settings" },
   ];
 
   const allLinks = [...publicLinks, ...(isLoggedIn ? privateLinks : [])];
@@ -106,12 +102,6 @@ export default function Navbar() {
 
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow z-50">
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-2 text-sm hover:bg-gray-50"
-                    >
-                      Settings
-                    </Link>
                     <Link
                       href="/my-portfolio"
                       className="block px-4 py-2 text-sm hover:bg-gray-50"

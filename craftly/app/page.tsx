@@ -1,40 +1,58 @@
 "use client";
 
 import Link from "next/link";
-import { Analytics } from "@vercel/analytics/react"; // note the 'react' import
-
+import { Analytics } from "@vercel/analytics/react";
 
 export default function HomePage() {
   return (
-    <section className="min-h-screen bg-white flex flex-col items-center px-6 py-16">
-      {/* Hero section */}
-      <div className="text-center max-w-3xl mb-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-          Welcome to Craftly
-        </h1>
-        {/* <p className="text-gray-700 text-lg">
-          Manage your creative journey, showcase your projects, and make your
-          portfolio stand out — all in one place.
-        </p> */}
-        <div className="mt-8 flex justify-center gap-4 flex-wrap">
+    <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/50 px-6 py-16">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center">
+        <div className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1 text-sm font-medium text-emerald-700">
+          Creative portfolio workspace
+        </div>
+
+        <div className="mt-8 text-center">
+          <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
+            Build a portfolio people remember
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+            Craftly helps you publish your work clearly, showcase your strengths,
+            and share one polished portfolio link.
+          </p>
+        </div>
+
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
             href="/explore"
-            className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+            className="rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-700"
           >
             Explore Portfolios
           </Link>
           <Link
             href="/my-portfolio"
-            className="px-6 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition"
+            className="rounded-lg border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
           >
             My Portfolio
           </Link>
         </div>
+
+        <div className="mt-14 grid w-full max-w-4xl gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur">
+            <p className="text-sm font-medium text-slate-500">Fast Setup</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">Under 5 min</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur">
+            <p className="text-sm font-medium text-slate-500">Layouts</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">Clean and responsive</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur">
+            <p className="text-sm font-medium text-slate-500">Sharing</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900">Single public link</p>
+          </div>
+        </div>
       </div>
 
-      
-            <Analytics /> {/* This will automatically track pageviews */}
-
+      <Analytics />
     </section>
   );
 }
