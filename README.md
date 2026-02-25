@@ -18,8 +18,8 @@
 
 ### Semester Project
 
-- Link to your production version: [ Production](https://craftly-omega.vercel.app/explore) <!-- Replace with actual URL -->
-- Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
+- Link to your production version: [ Production](https://craftly-omega.vercel.app) 
+- Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) 
 <!-- Add more as necessary -->
 
 ### Semester Assignments
