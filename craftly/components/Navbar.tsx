@@ -7,14 +7,21 @@ import { useAuth } from "../app/context/AuthContext";
 import { usePathname } from "next/navigation";
 import LoginModal from "./LoginModal";
 
+type NavLink = {
+  href: string;
+  label: string;
+};
+
+const fallbackPublicLinks: NavLink[] = [
+  { href: "/", label: "Home" },
+  { href: "/explore?page=1", label: "Explore" },
+];
+
 export default function Navbar() {
   const { isLoggedIn, user, logout } = useAuth();
   const pathname = usePathname();
 
-  const publicLinks = [
-    { href: "/", label: "Home" },
-    { href: "/explore?page=1", label: "Explore" },
-  ];
+  const [publicLinks, setPublicLinks] = useState<NavLink[]>(fallbackPublicLinks);
 
   const privateLinks = [
     { href: "/my-portfolio", label: "My Portfolio" },
@@ -27,6 +34,42 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadNavLinks = async () => {
+      try {
+        const res = await fetch("/api/navigation-links", { cache: "no-store" });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (!active || !Array.isArray(data?.links)) return;
+
+        const parsed = data.links.filter(
+          (item: unknown): item is NavLink =>
+            !!item &&
+            typeof item === "object" &&
+            "href" in item &&
+            "label" in item &&
+            typeof (item as { href: unknown }).href === "string" &&
+            typeof (item as { label: unknown }).label === "string"
+        );
+
+        if (parsed.length > 0) {
+          setPublicLinks(parsed);
+        }
+      } catch {
+        // Keep fallback links if CMS fetch fails.
+      }
+    };
+
+    loadNavLinks();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -55,7 +98,8 @@ export default function Navbar() {
           {/* Desktop links */}
           <ul className="hidden md:flex gap-6 font-medium">
             {allLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const linkPath = link.href.split("?")[0];
+              const isActive = pathname === linkPath;
               return (
                 <li key={link.href}>
                   <Link
