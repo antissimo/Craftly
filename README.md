@@ -19,7 +19,7 @@
 ### Semester Project
 
 - Link to your production version: [ Production](https://craftly-omega.vercel.app) 
-- Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) 
+- Link to your final report: [**Final Report**](https://bird-ease-bda.notion.site/Craftly-314448b7b8d0807d8a3fdad8ca47cde0)
 <!-- Add more as necessary -->
 
 ### Semester Assignments
