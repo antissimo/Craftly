@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabaseClient } from "@/lib/supabase/client";
 import { useAuth } from "../context/AuthContext";
 
@@ -31,6 +31,30 @@ interface Skill {
   level?: string;
 }
 
+type ValidationErrors = {
+  title?: string;
+  experiences: Record<number, { position?: string; company?: string; date?: string }>;
+  education: Record<number, { school?: string; date?: string }>;
+  skills: Record<number, { name?: string }>;
+};
+
+function emptyValidationErrors(): ValidationErrors {
+  return {
+    experiences: {},
+    education: {},
+    skills: {},
+  };
+}
+
+function hasValidationErrors(errors: ValidationErrors) {
+  return Boolean(
+    errors.title ||
+      Object.keys(errors.experiences).length ||
+      Object.keys(errors.education).length ||
+      Object.keys(errors.skills).length
+  );
+}
+
 export default function EditablePortfolioPage() {
   const { user, isLoggedIn } = useAuth();
   
@@ -45,6 +69,8 @@ export default function EditablePortfolioPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<ValidationErrors>(emptyValidationErrors());
 
   // Load user's portfolio when they are logged in
   useEffect(() => {
@@ -129,15 +155,103 @@ export default function EditablePortfolioPage() {
     return d.toISOString().split("T")[0];
   };
 
+  const buildValidationErrors = useCallback((): ValidationErrors => {
+    const next = emptyValidationErrors();
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      next.title = "Portfolio title is required.";
+    } else if (trimmedTitle.length < 3) {
+      next.title = "Portfolio title must be at least 3 characters.";
+    }
+
+    experiences.forEach((exp, idx) => {
+      const position = exp.position?.trim() || "";
+      const company = exp.company?.trim() || "";
+      const startDate = formatDateInput(exp.start_date);
+      const endDate = formatDateInput(exp.end_date);
+
+      if (!position && company) {
+        next.experiences[idx] = {
+          ...next.experiences[idx],
+          position: "Position is required when company is provided.",
+        };
+      }
+
+      if (position && !company) {
+        next.experiences[idx] = {
+          ...next.experiences[idx],
+          company: "Company is required when position is provided.",
+        };
+      }
+
+      if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+        next.experiences[idx] = {
+          ...next.experiences[idx],
+          date: "End date cannot be earlier than start date.",
+        };
+      }
+    });
+
+    education.forEach((edu, idx) => {
+      const school = edu.school?.trim() || "";
+      const degree = edu.degree?.trim() || "";
+      const startDate = formatDateInput(edu.start_date);
+      const endDate = formatDateInput(edu.end_date);
+      const hasOtherValues = Boolean(degree || startDate || endDate);
+
+      if (hasOtherValues && !school) {
+        next.education[idx] = {
+          ...next.education[idx],
+          school: "School is required when other education fields are filled.",
+        };
+      }
+
+      if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+        next.education[idx] = {
+          ...next.education[idx],
+          date: "End date cannot be earlier than start date.",
+        };
+      }
+    });
+
+    skills.forEach((skill, idx) => {
+      const name = skill.name?.trim() || "";
+      const level = skill.level?.trim() || "";
+
+      if (!name && level) {
+        next.skills[idx] = {
+          ...next.skills[idx],
+          name: "Skill name is required when level is provided.",
+        };
+      } else if (name && name.length < 2) {
+        next.skills[idx] = {
+          ...next.skills[idx],
+          name: "Skill name must be at least 2 characters.",
+        };
+      }
+    });
+
+    return next;
+  }, [title, experiences, education, skills]);
+
+  useEffect(() => {
+    if (!showValidation) return;
+    setFieldErrors(buildValidationErrors());
+  }, [showValidation, buildValidationErrors]);
+
   const handleSave = async () => {
     if (!user) {
       setError("You must be logged in to save a portfolio");
       return;
     }
     
-    // Validation
-    if (!title.trim()) {
-      setError("Portfolio title is required");
+    setShowValidation(true);
+    const validationErrors = buildValidationErrors();
+    setFieldErrors(validationErrors);
+
+    if (hasValidationErrors(validationErrors)) {
+      setError("Please fix highlighted fields before saving.");
       return;
     }
     
@@ -381,6 +495,8 @@ export default function EditablePortfolioPage() {
       }
 
       setSuccess(true);
+      setError(null);
+      setFieldErrors(emptyValidationErrors());
       setTimeout(() => setSuccess(false), 3000);
       
     } catch (err: any) {
@@ -507,8 +623,14 @@ export default function EditablePortfolioPage() {
             placeholder="Portfolio Title *"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border p-3 rounded-lg mb-4 text-lg font-semibold bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+            aria-invalid={Boolean(fieldErrors.title)}
+            className={`w-full border p-3 rounded-lg mb-2 text-lg font-semibold bg-white text-gray-900 focus:ring-2 focus:outline-none ${
+              fieldErrors.title
+                ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+            }`}
           />
+          {fieldErrors.title && <p className="mb-3 text-sm text-red-600">{fieldErrors.title}</p>}
           <textarea
             placeholder="Summary"
             value={summary}
@@ -549,14 +671,30 @@ export default function EditablePortfolioPage() {
                       placeholder="Position *"
                       value={exp.position}
                       onChange={(e) => updateExperience(idx, 'position', e.target.value)}
-                      className="w-full border p-3 rounded-lg mb-3 bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                      aria-invalid={Boolean(fieldErrors.experiences[idx]?.position)}
+                      className={`w-full border p-3 rounded-lg mb-2 bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                        fieldErrors.experiences[idx]?.position
+                          ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                      }`}
                     />
+                    {fieldErrors.experiences[idx]?.position && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.experiences[idx].position}</p>
+                    )}
                     <input
                       placeholder="Company *"
                       value={exp.company}
                       onChange={(e) => updateExperience(idx, 'company', e.target.value)}
-                      className="w-full border p-3 rounded-lg mb-3 bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                      aria-invalid={Boolean(fieldErrors.experiences[idx]?.company)}
+                      className={`w-full border p-3 rounded-lg mb-2 bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                        fieldErrors.experiences[idx]?.company
+                          ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                      }`}
                     />
+                    {fieldErrors.experiences[idx]?.company && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.experiences[idx].company}</p>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
@@ -564,7 +702,12 @@ export default function EditablePortfolioPage() {
                           type="date"
                           value={formatDateInput(exp.start_date)}
                           onChange={(e) => updateExperience(idx, 'start_date', e.target.value)}
-                          className="w-full border p-3 rounded-lg bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                          aria-invalid={Boolean(fieldErrors.experiences[idx]?.date)}
+                          className={`w-full border p-3 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                            fieldErrors.experiences[idx]?.date
+                              ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                          }`}
                         />
                       </div>
                       <div>
@@ -573,10 +716,18 @@ export default function EditablePortfolioPage() {
                           type="date"
                           value={formatDateInput(exp.end_date)}
                           onChange={(e) => updateExperience(idx, 'end_date', e.target.value || null)}
-                          className="w-full border p-3 rounded-lg bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                          aria-invalid={Boolean(fieldErrors.experiences[idx]?.date)}
+                          className={`w-full border p-3 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                            fieldErrors.experiences[idx]?.date
+                              ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                          }`}
                         />
                       </div>
                     </div>
+                    {fieldErrors.experiences[idx]?.date && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.experiences[idx].date}</p>
+                    )}
                     <textarea
                       placeholder="Description"
                       value={exp.description || ""}
@@ -623,8 +774,16 @@ export default function EditablePortfolioPage() {
                       placeholder="School *"
                       value={edu.school}
                       onChange={(e) => updateEducation(idx, 'school', e.target.value)}
-                      className="w-full border p-3 rounded-lg mb-3 bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                      aria-invalid={Boolean(fieldErrors.education[idx]?.school)}
+                      className={`w-full border p-3 rounded-lg mb-2 bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                        fieldErrors.education[idx]?.school
+                          ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                      }`}
                     />
+                    {fieldErrors.education[idx]?.school && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.education[idx].school}</p>
+                    )}
                     <input
                       placeholder="Degree"
                       value={edu.degree || ""}
@@ -638,7 +797,12 @@ export default function EditablePortfolioPage() {
                           type="date"
                           value={formatDateInput(edu.start_date)}
                           onChange={(e) => updateEducation(idx, 'start_date', e.target.value || null)}
-                          className="w-full border p-3 rounded-lg bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                          aria-invalid={Boolean(fieldErrors.education[idx]?.date)}
+                          className={`w-full border p-3 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                            fieldErrors.education[idx]?.date
+                              ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                          }`}
                         />
                       </div>
                       <div>
@@ -647,10 +811,18 @@ export default function EditablePortfolioPage() {
                           type="date"
                           value={formatDateInput(edu.end_date)}
                           onChange={(e) => updateEducation(idx, 'end_date', e.target.value || null)}
-                          className="w-full border p-3 rounded-lg bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                          aria-invalid={Boolean(fieldErrors.education[idx]?.date)}
+                          className={`w-full border p-3 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                            fieldErrors.education[idx]?.date
+                              ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                          }`}
                         />
                       </div>
                     </div>
+                    {fieldErrors.education[idx]?.date && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.education[idx].date}</p>
+                    )}
                   </div>
                 ))}
                 
@@ -692,8 +864,16 @@ export default function EditablePortfolioPage() {
                       placeholder="Skill Name *"
                       value={skill.name}
                       onChange={(e) => updateSkill(idx, 'name', e.target.value)}
-                      className="w-full border p-3 rounded-lg mb-3 bg-gray-50 text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                      aria-invalid={Boolean(fieldErrors.skills[idx]?.name)}
+                      className={`w-full border p-3 rounded-lg mb-2 bg-gray-50 text-gray-900 focus:ring-2 focus:outline-none ${
+                        fieldErrors.skills[idx]?.name
+                          ? "border-red-400 focus:border-red-500 focus:ring-red-200"
+                          : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"
+                      }`}
                     />
+                    {fieldErrors.skills[idx]?.name && (
+                      <p className="mb-2 text-sm text-red-600">{fieldErrors.skills[idx].name}</p>
+                    )}
                     <input
                       placeholder="Level (e.g., Beginner, Intermediate, Expert)"
                       value={skill.level || ""}

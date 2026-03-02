@@ -1,6 +1,8 @@
 import CVCard from "@/components/CVCard";
+import ExploreSearchForm from "@/components/ExploreSearchForm";
 import LoadingGrid from "@/components/LoadingGrid";
 import { headers } from "next/headers";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -26,6 +28,15 @@ type ExploreResponse = {
     totalPages: number;
     total: number;
   };
+};
+
+export const metadata: Metadata = {
+  title: "Explore Portfolios",
+  description:
+    "Browse public creative portfolios, search by keywords, and discover recent work published on Craftly.",
+  alternates: {
+    canonical: "/explore",
+  },
 };
 
 async function getCurrentUrl() {
@@ -79,20 +90,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             Browse recent public profiles and open the full portfolio in one click.
           </p>
 
-          <form action="/explore" method="get" className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <input
-              name="q"
-              defaultValue={query}
-              placeholder="Search by title, summary, or email..."
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none ring-cyan-200 transition focus:ring-2"
-            />
-            <button
-              type="submit"
-              className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700"
-            >
-              Search
-            </button>
-          </form>
+          <ExploreSearchForm initialQuery={query} />
         </div>
 
         <Suspense fallback={<LoadingGrid />}>
@@ -123,6 +121,16 @@ async function ExploreContent({ page, query }: { page: number; query: string }) 
           <p className="mt-2 text-slate-500">
             No results for "{query || "your search"}". Try another keyword.
           </p>
+          {query ? (
+            <div className="mt-6">
+              <Link
+                href="/explore?page=1"
+                className="inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Clear search and show all
+              </Link>
+            </div>
+          ) : null}
         </div>
       );
     }
@@ -186,6 +194,23 @@ async function ExploreContent({ page, query }: { page: number; query: string }) 
       <div className="rounded-2xl border border-red-200 bg-red-50 p-14 text-center">
         <h3 className="text-xl font-semibold text-red-700">Failed to load portfolios</h3>
         <p className="mt-2 text-red-600">{message}</p>
+        <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <Link
+            href={pageHref(page, query)}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+          >
+            Try again
+          </Link>
+          <Link
+            href="/explore?page=1"
+            className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100"
+          >
+            Go to first page
+          </Link>
+        </div>
+        <p className="mt-3 text-sm text-red-600">
+          If this keeps happening, check your connection and refresh the page.
+        </p>
       </div>
     );
   }

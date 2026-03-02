@@ -49,3 +49,32 @@
 - [ ] Conduct usablity evaluation of your web application
 - [ ] Analyze the application's performance ([PageSpeed Insights](https://pagespeed.web.dev/))
 - [ ] The analysis results will be part of the final report
+
+## Heuristic Evaluation (Nielsen)
+
+This project was evaluated using Nielsen's usability heuristics.
+
+1. Visibility of system status
+Finding: Search actions did not always provide explicit progress feedback.
+Severity: Medium
+Action: Added clear `Searching...` feedback on Explore search.
+
+2. User control and freedom
+Finding: Active filters/search did not offer a fast reset.
+Severity: Medium
+Action: Added `Clear` search action and a no-results shortcut to reset query.
+
+3. Help users recognize, diagnose, and recover from errors
+Finding: Error states lacked direct recovery actions.
+Severity: Medium
+Action: Added `Try again` and `Go to first page` actions on Explore API errors.
+
+4. Error prevention
+Finding: Portfolio editing relied too much on backend validation.
+Severity: Medium
+Action: Added inline form validation and blocked save until invalid fields are corrected.
+
+5. Match between system and the real world / consistency
+Finding: Terminology and UI patterns were mostly consistent with minor gaps.
+Severity: Low
+Action: Standardized wording and state cues in search and form flows.

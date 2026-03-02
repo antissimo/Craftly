@@ -1,7 +1,15 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "Craftly home page with a quick overview, key features, and direct access to explore portfolios.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function HomePage() {
   return (
