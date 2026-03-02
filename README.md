@@ -18,8 +18,8 @@
 
 ### Semester Project
 
-- Link to your production version: [ Production](https://craftly-omega.vercel.app/explore) <!-- Replace with actual URL -->
-- Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
+- Link to your production version: [ Production](https://craftly-omega.vercel.app) 
+- Link to your final report: [**Final Report**](https://bird-ease-bda.notion.site/Craftly-314448b7b8d0807d8a3fdad8ca47cde0)
 <!-- Add more as necessary -->
 
 ### Semester Assignments
@@ -35,46 +35,17 @@
 
 ### Web Application Requirements
 
-- [ ] The application will be used from a web browser
-- [ ] It will be accessible on devices of different sizes
-- [ ] Users can search/filter products or services
-- [ ] The application will support user login for showing private content
-- [ ] One of the public pages will be a blog containing multiple posts with diverse content (images, videos, code snippets)
-- [ ] Part of the application's content will be stored in a remote headless CMS system
+- [X] The application will be used from a web browser
+- [X] It will be accessible on devices of different sizes
+- [X] Users can search/filter products or services
+- [X] The application will support user login for showing private content
+- [X] One of the public pages will be a blog containing multiple posts with diverse content (images, videos, code snippets)
+- [X] Part of the application's content will be stored in a remote headless CMS system
 
 ### Project Demonstration
 
-- [ ] Show the production version of the project or produce a video demonstrating the above requirements
-- [ ] The production version will be deployed online (on an appropriate cloud platform [Vercel](https://vercel.com), [Netlify](https://www.netlify.com/) or personal VPS)
-- [ ] Conduct usablity evaluation of your web application
-- [ ] Analyze the application's performance ([PageSpeed Insights](https://pagespeed.web.dev/))
-- [ ] The analysis results will be part of the final report
-
-## Heuristic Evaluation (Nielsen)
-
-This project was evaluated using Nielsen's usability heuristics.
-
-1. Visibility of system status
-Finding: Search actions did not always provide explicit progress feedback.
-Severity: Medium
-Action: Added clear `Searching...` feedback on Explore search.
-
-2. User control and freedom
-Finding: Active filters/search did not offer a fast reset.
-Severity: Medium
-Action: Added `Clear` search action and a no-results shortcut to reset query.
-
-3. Help users recognize, diagnose, and recover from errors
-Finding: Error states lacked direct recovery actions.
-Severity: Medium
-Action: Added `Try again` and `Go to first page` actions on Explore API errors.
-
-4. Error prevention
-Finding: Portfolio editing relied too much on backend validation.
-Severity: Medium
-Action: Added inline form validation and blocked save until invalid fields are corrected.
-
-5. Match between system and the real world / consistency
-Finding: Terminology and UI patterns were mostly consistent with minor gaps.
-Severity: Low
-Action: Standardized wording and state cues in search and form flows.
+- [X] Show the production version of the project or produce a video demonstrating the above requirements
+- [X] The production version will be deployed online (on an appropriate cloud platform [Vercel](https://vercel.com), [Netlify](https://www.netlify.com/) or personal VPS)
+- [X] Conduct usablity evaluation of your web application
+- [X] Analyze the application's performance ([PageSpeed Insights](https://pagespeed.web.dev/))
+- [X] The analysis results will be part of the final report
